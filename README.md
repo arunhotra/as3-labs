@@ -15,10 +15,10 @@ UDF Blueprint: AS3 PS Tech Summit Lab Dec 2019
 
 | Host              | Management IP | Subnet 10 IP    | Username | Password |
 | ----------------- | ------------- | --------------- | -------- | -------- |
-| BIG-IP            | 10.1.1.4      | 10.1.10.11      | admin    | admin    |
-| BIG-IQ CM         | 10.1.1.9      | 10.1.10.16      | admin    | admin    |
+| BIG-IP            | 10.1.1.11     | 10.1.10.40      | admin    | admin    |
+| BIG-IQ CM         | 10.1.1.5      | 10.1.10.17      | admin    | Admin12# |
 | Linux WebServer   | 10.1.1.6      | 10.1.10.100-105 | ubuntu   | key-only |
-| Windows Jump Host | 10.1.1.7      | 10.1.10.200     | User     | user     |
+| Windows Jump Host | 10.1.1.7      | 10.1.10.200     | user     | user     |
 
 ## AS3 Reference Links
 
@@ -35,40 +35,5 @@ UDF Blueprint: AS3 PS Tech Summit Lab Dec 2019
 - [GIT and GITHUB - Remotes] - (https://www.youtube.com/watch?v=Gg4bLk8cGNo&t=71s)
 
 - [Dev Ops fundamentals for sales professionals] - https://hive.f5.com/docs/DOC-50153
-
-## Lab Guide
-
-### Start UDF Lab Environment
-
-Once the environment has been started, confirm you are able to login to windows and big-iq and big-ip instances with credentials above.
-
----
-
-#### Clone this git repo
-
-From the windows host:
-
-1. Open cmd or bash git console, which ever your prefer.
-2. Clone repo with the following command: 'git clone https://github.com/arunhotra/as3-may-tech-day.git'
-3. This will clone this repository into the current working directory, which is likely: `C:\User\Administrator`.
-4. navigate a file explorer to the newly created folder: `C:\Users\Administrator\as3-may-tech-day`
-
----
-
-#### Setup Postman Environment [Postman will be enabled with the correct settings. Follow these steps in case they are not]
-
-1. Open up Postman.
-2. Ensure SSL Validation is disabled: File Menu => Settings. Then turn off "SSL certificate verification"
-3. Click Import button in top left, to import the postman collection.
-4. Drag and drop the `postman_collection.json` file into the import window. (lab files folder on desktop)
-5. Click Import button in top left, to import the postman environment.
-6. Drag and drop the `AS3-demo.postman_environment.json` file into the import window.
-
-Next, set the environment and start exploring the collection:
-
-1. In the dropdown at the top right, where it says "No Environment" select: "AS3Demo"
-2. On the left hand side, where you see History & Collections, select Collections, and expand out "Postman Collections AS3".
-
-Follow lab guide (In the LabGuide folder from the repository)
 
 ---

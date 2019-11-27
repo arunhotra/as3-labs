@@ -1,0 +1,219 @@
+{
+	"info": {
+		"_postman_id": "59ceb2db-7561-40c7-bfa1-e0be8750c60b",
+		"name": "big-iq apps https offload",
+		"description": "This collection provides a sample of how to create,read and update a sample tcp application on BIG-IQ using AS3.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create App",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "93db98dc-2219-498d-92cc-e914ad325879",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"var taskid = jsonData.id;",
+							"",
+							"pm.environment.set(\"taskid\",taskid);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"class\": \"AS3\",\r\n     \"declaration\": {\r\n         \"class\": \"ADC\",\r\n         \"schemaVersion\": \"3.12.0\",\r\n         \"id\": \"{{environment}}_{{app_id}}\",\r\n         \"label\": \"AS3_app\",\r\n         \"target\": { \"address\" : \"{{bigip}}\" },\r\n         \"remark\": \"Created_using_AS3\",\r\n         \"t_{{app_id}}\": {\r\n             \"class\": \"Tenant\",\r\n             \"defaultRouteDomain\": 0,\r\n             \"{{environment}}_{{application_name}}_{{virtual_port}}\": {\r\n                 \"class\": \"Application\",\r\n                 \"template\": \"generic\",\r\n                 \"schemaOverlay\": \"https-offload-app\",\r\n                 \"{{environment}}_{{application_name}}_{{virtual_port}}_vs\": {\r\n                   \"class\": \"Service_HTTPS\",\r\n                   \"virtualAddresses\": [\r\n                     \"{{virtual_servers_ip}}\"\r\n                 ],\r\n                  \"virtualPort\": {{virtual_port}},\r\n                  \"pool\": \"{{environment}}_{{application_name}}_{{virtual_port}}_pool\",\r\n                  \"serverTLS\": {\"bigip\":\"/Common/test_c_ssl_pf\"},\r\n                  \"redirect80\": false\r\n                 },\r\n                 \r\n                 \"{{environment}}_{{application_name}}_{{virtual_port}}_pool\": {\r\n                     \"class\": \"Pool\",\r\n\t\t\t          \"members\": [\r\n\t\t\t            {\r\n\t\t\t              \"servicePort\": {{member_1_port}},\r\n\t\t\t              \"shareNodes\": true,\r\n\t\t\t              \"serverAddresses\": [\"{{member_1_ip}}\"]\r\n\t\t\t            },\r\n\t\t\t            {\r\n\t\t\t              \"servicePort\": {{member_2_port}},\r\n\t\t\t              \"shareNodes\": true,\r\n\t\t\t              \"serverAddresses\": [\"{{member_2_ip}}\"]\r\n\t\t\t            }\r\n\t\t\t          ]\r\n                 }\r\n            }\r\n         }\r\n     }\r\n }"
+				},
+				"url": {
+					"raw": "https://{{biq_ip_address}}/mgmt/shared/appsvcs/declare?async=true",
+					"protocol": "https",
+					"host": [
+						"{{biq_ip_address}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"appsvcs",
+						"declare"
+					],
+					"query": [
+						{
+							"key": "async",
+							"value": "true"
+						}
+					]
+				},
+				"description": "Create an app by sending a declaration"
+			},
+			"response": []
+		},
+		{
+			"name": "check task status",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{biq_ip_address}}/mgmt/shared/appsvcs/task/{{taskid}}",
+					"protocol": "https",
+					"host": [
+						"{{biq_ip_address}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"appsvcs",
+						"task",
+						"{{taskid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check app config",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{biq_ip_address}}/mgmt/shared/appsvcs/declare/t_{{app_id}}",
+					"protocol": "https",
+					"host": [
+						"{{biq_ip_address}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"appsvcs",
+						"declare",
+						"t_{{app_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete app",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e9b4fc52-24c3-435b-b7f6-f6c585bd7d1c",
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"var taskid = jsonData.id;",
+							"",
+							"pm.environment.set(\"taskid\",taskid);"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"class\": \"AS3\",\r\n    \r\n    \"declaration\": {\r\n              \"id\": \"{{environment}}_{{app_id}}\",\r\n              \"schemaVersion\": \"3.12.0\",\r\n        \"class\": \"ADC\",\r\n        \"target\": {\r\n            \"address\": \"{{bigip}}\"\r\n        },\r\n        \"t_{{app_id}}\": {\r\n            \"class\": \"Tenant\"\r\n        }\r\n    }\r\n}\r\n"
+				},
+				"url": {
+					"raw": "https://{{biq_ip_address}}/mgmt/shared/appsvcs/declare?async=true",
+					"protocol": "https",
+					"host": [
+						"{{biq_ip_address}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"appsvcs",
+						"declare"
+					],
+					"query": [
+						{
+							"key": "async",
+							"value": "true"
+						}
+					]
+				},
+				"description": "Create an app by sending a declaration"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

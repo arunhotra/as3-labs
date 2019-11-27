@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "a15d05d5-74c3-4b9b-aa1e-9cfbcc56e6e2",
+		"name": "Sample BIG-IQ templates",
+		"description": "Sample BIG-IQ templates",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create a template (HTTP)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"Template for creating HTTP applications\",\n  \"name\": \"http-app\",\n  \"published\": false,\n  \"isUICompatible\": true,\n  \"tenant\": {\n    \"name\": \"\",\n    \"override\": false,\n    \"editable\": true\n  },\n  \"schemaOverlay\": {\n    \"type\": \"object\",\n    \"properties\": {\n        \"class\": {\n            \"type\": \"string\",\n            \"const\": \"Application\"\n        },\n        \"template\": {},\n        \"schemaOverlay\": {},\n        \"label\": {},\n        \"remark\": {}\n    },\n    \"additionalProperties\": {\n        \"allOf\": [\n            {\n                \"anyOf\": [\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Analytics_Profile\"\n                            }\n                        }\n                    },\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Pool\"\n                            }\n                        }\n                    },\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Service_HTTP\"\n                            }\n                        }\n                    }\n                ]\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Analytics_Profile\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Analytics_Profile\"\n                }\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Pool\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Pool\"\n                }\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Service_HTTP\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Service_HTTP\"\n                }\n            }\n        ]\n    },\n    \"required\": [\n        \"class\"\n    ],\n    \"definitions\": {\n        \"Analytics_Profile\": {\n            \"properties\": {\n                \"class\": {},\n                \"collectUserAgent\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectClientSideStatistics\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectGeo\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectUrl\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectOsAndBrowser\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectMethod\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectResponseCode\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectSubnet\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectIp\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectPageLoadTime\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectMaxTpsAndThroughput\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                }\n            },\n            \"type\": \"object\",\n            \"additionalproperties\": false\n        },\n        \"Pool\": {\n            \"properties\": {\n                \"class\": {},\n                \"members\": {\n                    \"type\": \"array\",\n                    \"items\": {\n                        \"type\": \"object\",\n                        \"properties\": {\n                            \"servicePort\": {\n                                \"type\": \"number\",\n                                \"default\": 80\n                            },\n                            \"adminState\": {\n                                \"type\": \"string\",\n                                \"default\": \"enable\"\n                            },\n                            \"shareNodes\": {\n                                \"type\": \"boolean\",\n                                \"default\": true,\n                                \"const\": true\n                            },\n                            \"serverAddresses\": {\n                                \"type\": \"array\"\n                            }\n                        }\n                    }\n                },\n                \"monitors\": {\n                    \"type\": \"array\",\n                    \"default\": [\n                        \"http\"\n                    ]\n                },\n                \"loadBalancingMode\": {\n                    \"type\": \"string\",\n                    \"default\": \"least-connections-member\",\n                    \"const\": \"least-connections-member\"\n                },\n                \"slowRampTime\": {\n                    \"type\": \"number\",\n                    \"default\": 300,\n                    \"const\": 300\n                }\n            },\n            \"type\": \"object\",\n            \"additionalproperties\": false\n        },\n        \"Service_HTTP\": {\n            \"properties\": {\n                \"class\": {},\n                \"virtualPort\": {\n                    \"type\": \"number\",\n                    \"default\": 80\n                },\n                \"profileAnalytics\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"use\": {\n                            \"type\": \"string\"\n                        }\n                    }\n                },\n                \"virtualAddresses\": {\n                    \"type\": \"array\"\n                },\n                \"pool\": {\n                    \"type\": \"string\",\n                    \"default\": \"Pool\"\n                },\n                \"enable\": {\n                    \"type\": \"boolean\",\n                    \"default\": true\n                },\n                \"snat\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/SNATS_BANK_DEV1\"\n                        }\n                    }\n                },\n                \"iRules\": {\n                    \"type\": \"array\"\n                },\n                \"profileTCP\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/dev1_bank_tcp\",\n                            \"const\": \"/Common/dev1_bank_tcp\"\n                        }\n                    }\n                },\n                \"profileHTTP\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/dev1_bank_http\",\n                            \"const\": \"/Common/dev1_bank_http\"\n                        }\n                    }\n                },\n                \"persistenceMethods\": {\n                    \"type\": \"array\",\n                    \"default\": [\n                        \"cookie\"\n                    ],\n                    \"const\": [\n                        \"cookie\"\n                    ]\n                }\n            },\n            \"type\": \"object\",\n            \"additionalproperties\": false\n        }\n    }\n}\n}\n"
+				},
+				"url": {
+					"raw": "https://{{biq_ip_address}}/mgmt/cm/global/appsvcs-templates",
+					"protocol": "https",
+					"host": [
+						"{{biq_ip_address}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"appsvcs-templates"
+					]
+				},
+				"description": "Creates an HTTP template"
+			},
+			"response": []
+		},
+		{
+			"name": "Create a template (HTTPs Bridge)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"HTTPS bridge template\",\n  \"name\": \"https-bridge-app\",\n  \"published\": true,\n  \"isUICompatible\": true,\n  \"tenant\": {\n    \"name\": \"\",\n    \"override\": false,\n    \"editable\": true\n  },\n  \"schemaOverlay\":{\n    \"type\": \"object\",\n    \"properties\": {\n        \"class\": {\n            \"type\": \"string\",\n            \"const\": \"Application\"\n        },\n        \"template\": {},\n        \"schemaOverlay\": {},\n        \"label\": {},\n        \"remark\": {}\n    },\n    \"additionalProperties\": {\n        \"allOf\": [\n            {\n                \"anyOf\": [\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Pool\"\n                            }\n                        }\n                    },\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Service_HTTPS\"\n                            }\n                        }\n                    },\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Analytics_Profile\"\n                            }\n                        }\n                    }\n                ]\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Pool\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Pool\"\n                }\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Service_HTTPS\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Service_HTTPS\"\n                }\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Analytics_Profile\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Analytics_Profile\"\n                }\n            }\n        ]\n    },\n    \"required\": [\n        \"class\"\n    ],\n    \"definitions\": {\n        \"Pool\": {\n            \"properties\": {\n                \"class\": {},\n                \"members\": {\n                    \"type\": \"array\",\n                    \"items\": {\n                        \"type\": \"object\",\n                        \"properties\": {\n                            \"servicePort\": {\n                                \"type\": \"number\",\n                                \"default\": 80\n                            },\n                            \"adminState\": {\n                                \"type\": \"string\",\n                                \"default\": \"enable\"\n                            },\n                            \"shareNodes\": {\n                                \"type\": \"boolean\",\n                                \"default\": true,\n                                \"const\": true\n                            },\n                            \"serverAddresses\": {\n                                \"type\": \"array\"\n                            }\n                        }\n                    }\n                },\n                \"monitors\": {\n                    \"type\": \"array\",\n                    \"default\": [\n                        \"http\"\n                    ]\n                },\n                \"slowRampTime\": {\n                    \"type\": \"number\",\n                    \"default\": 300,\n                    \"const\": 300\n                },\n                \"loadBalancingMode\": {\n                    \"type\": \"string\",\n                    \"default\": \"least-connections-member\",\n                    \"const\": \"least-connections-member\"\n                }\n            },\n            \"type\": \"object\",\n            \"additionalproperties\": false\n        },\n        \"Service_HTTPS\": {\n            \"properties\": {\n                \"class\": {},\n                \"virtualAddresses\": {\n                    \"type\": \"array\"\n                },\n                \"pool\": {\n                    \"type\": \"string\",\n                    \"default\": \"Pool\"\n                },\n                \"virtualPort\": {\n                    \"type\": \"number\",\n                    \"default\": 443\n                },\n                \"enable\": {\n                    \"type\": \"boolean\",\n                    \"default\": true\n                },\n                \"redirect80\": {\n                    \"type\": \"boolean\",\n                    \"default\": true\n                },\n                \"serverTLS\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\"\n                        }\n                    }\n                },\n                \"clientTLS\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/serverssl\",\n                            \"const\": \"/Common/serverssl\"\n                        }\n                    }\n                },\n                \"profileHTTP\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/dev1_bank_http\",\n                            \"const\": \"/Common/dev1_bank_http\"\n                        }\n                    }\n                },\n                \"profileTCP\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/dev1_bank_tcp\",\n                            \"const\": \"/Common/dev1_bank_tcp\"\n                        }\n                    }\n                },\n                \"snat\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/SNATS_BANK_DEV1\",\n                            \"const\": \"/Common/SNATS_BANK_DEV1\"\n                        }\n                    }\n                },\n                \"profileAnalytics\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"use\": {\n                            \"type\": \"string\"\n                        }\n                    }\n                },\n                \"iRules\": {\n                    \"type\": \"array\"\n                }\n            },\n            \"type\": \"object\",\n            \"additionalProperties\": false\n        },\n        \"Analytics_Profile\": {\n            \"properties\": {\n                \"class\": {},\n                \"collectResponseCode\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectUserAgent\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectIp\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectSubnet\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectGeo\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectUrl\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectUserSession\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectClientSideStatistics\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectPageLoadTime\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectMaxTpsAndThroughput\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                }\n            },\n            \"type\": \"object\",\n            \"additionalProperties\": false\n        }\n    }\n}\n}\n"
+				},
+				"url": {
+					"raw": "https://{{biq_ip_address}}/mgmt/cm/global/appsvcs-templates",
+					"protocol": "https",
+					"host": [
+						"{{biq_ip_address}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"appsvcs-templates"
+					]
+				},
+				"description": "Creates an HTTP template"
+			},
+			"response": []
+		},
+		{
+			"name": "Create a template (HTTPs Offload)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"HTTPS offload template\",\n  \"name\": \"https-offload-app\",\n  \"published\": true,\n  \"isUICompatible\": true,\n  \"tenant\": {\n    \"name\": \"\",\n    \"override\": false,\n    \"editable\": true\n  },\n  \"schemaOverlay\":{\n    \"type\": \"object\",\n    \"properties\": {\n        \"class\": {\n            \"type\": \"string\",\n            \"const\": \"Application\"\n        },\n        \"template\": {},\n        \"schemaOverlay\": {},\n        \"label\": {},\n        \"remark\": {}\n    },\n    \"additionalProperties\": {\n        \"allOf\": [\n            {\n                \"anyOf\": [\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Pool\"\n                            }\n                        }\n                    },\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Service_HTTPS\"\n                            }\n                        }\n                    },\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Analytics_Profile\"\n                            }\n                        }\n                    }\n                ]\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Pool\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Pool\"\n                }\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Service_HTTPS\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Service_HTTPS\"\n                }\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Analytics_Profile\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Analytics_Profile\"\n                }\n            }\n        ]\n    },\n    \"required\": [\n        \"class\"\n    ],\n    \"definitions\": {\n        \"Pool\": {\n            \"properties\": {\n                \"class\": {},\n                \"members\": {\n                    \"type\": \"array\",\n                    \"items\": {\n                        \"type\": \"object\",\n                        \"properties\": {\n                            \"servicePort\": {\n                                \"type\": \"number\",\n                                \"default\": 80\n                            },\n                            \"adminState\": {\n                                \"type\": \"string\",\n                                \"default\": \"enable\"\n                            },\n                            \"shareNodes\": {\n                                \"type\": \"boolean\",\n                                \"default\": true,\n                                \"const\": true\n                            },\n                            \"serverAddresses\": {\n                                \"type\": \"array\"\n                            }\n                        }\n                    }\n                },\n                \"monitors\": {\n                    \"type\": \"array\",\n                    \"default\": [\n                        \"http\"\n                    ]\n                },\n                \"slowRampTime\": {\n                    \"type\": \"number\",\n                    \"default\": 300,\n                    \"const\": 300\n                },\n                \"loadBalancingMode\": {\n                    \"type\": \"string\",\n                    \"default\": \"least-connections-member\",\n                    \"const\": \"least-connections-member\"\n                }\n            },\n            \"type\": \"object\",\n            \"additionalproperties\": false\n        },\n        \"Service_HTTPS\": {\n            \"properties\": {\n                \"class\": {},\n                \"virtualAddresses\": {\n                    \"type\": \"array\"\n                },\n                \"pool\": {\n                    \"type\": \"string\",\n                    \"default\": \"Pool\"\n                },\n                \"virtualPort\": {\n                    \"type\": \"number\",\n                    \"default\": 443\n                },\n                \"enable\": {\n                    \"type\": \"boolean\",\n                    \"default\": true\n                },\n                \"redirect80\": {\n                    \"type\": \"boolean\",\n                    \"default\": true\n                },\n                \"serverTLS\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\"\n                        }\n                    }\n                },\n                \"profileHTTP\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/dev1_bank_http\",\n                            \"const\": \"/Common/dev1_bank_http\"\n                        }\n                    }\n                },\n                \"profileTCP\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/dev1_bank_tcp\",\n                            \"const\": \"/Common/dev1_bank_tcp\"\n                        }\n                    }\n                },\n                \"snat\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/SNATS_BANK_DEV1\",\n                            \"const\": \"/Common/SNATS_BANK_DEV1\"\n                        }\n                    }\n                },\n                \"profileAnalytics\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"use\": {\n                            \"type\": \"string\"\n                        }\n                    }\n                },\n                \"iRules\": {\n                    \"type\": \"array\"\n                }\n            },\n            \"type\": \"object\",\n            \"additionalProperties\": false\n        },\n        \"Analytics_Profile\": {\n            \"properties\": {\n                \"class\": {},\n                \"collectResponseCode\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectUserAgent\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectIp\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectSubnet\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectGeo\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectUrl\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectUserSession\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectClientSideStatistics\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectPageLoadTime\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                },\n                \"collectMaxTpsAndThroughput\": {\n                    \"type\": \"boolean\",\n                    \"default\": true,\n                    \"const\": true\n                }\n            },\n            \"type\": \"object\",\n            \"additionalProperties\": false\n        }\n    }\n}\n}\n"
+				},
+				"url": {
+					"raw": "https://{{biq_ip_address}}/mgmt/cm/global/appsvcs-templates",
+					"protocol": "https",
+					"host": [
+						"{{biq_ip_address}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"appsvcs-templates"
+					]
+				},
+				"description": "Creates an HTTP template"
+			},
+			"response": []
+		},
+		{
+			"name": "Create a template (TCP)",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"For load balancing a TCP-based application.\",\n    \"name\": \"tcp-app\",\n    \"published\": false,\n    \"isUICompatible\": true,\n    \"tenant\": {\n        \"name\": \"\",\n        \"override\": false,\n        \"editable\": true\n    },\n    \"schemaOverlay\": {\n    \"type\": \"object\",\n    \"properties\": {\n        \"class\": {\n            \"type\": \"string\",\n            \"const\": \"Application\"\n        },\n        \"template\": {},\n        \"schemaOverlay\": {},\n        \"label\": {},\n        \"remark\": {}\n    },\n    \"additionalProperties\": {\n        \"allOf\": [\n            {\n                \"anyOf\": [\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Pool\"\n                            }\n                        }\n                    },\n                    {\n                        \"properties\": {\n                            \"class\": {\n                                \"const\": \"Service_TCP\"\n                            }\n                        }\n                    }\n                ]\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Pool\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Pool\"\n                }\n            },\n            {\n                \"if\": {\n                    \"properties\": {\n                        \"class\": {\n                            \"const\": \"Service_TCP\"\n                        }\n                    }\n                },\n                \"then\": {\n                    \"$ref\": \"#/definitions/Service_TCP\"\n                }\n            }\n        ]\n    },\n    \"required\": [\n        \"class\"\n    ],\n    \"definitions\": {\n        \"Pool\": {\n            \"properties\": {\n                \"class\": {},\n                \"members\": {\n                    \"type\": \"array\",\n                    \"items\": {\n                        \"type\": \"object\",\n                        \"properties\": {\n                            \"servicePort\": {\n                                \"type\": \"number\",\n                                \"default\": 8081\n                            },\n                            \"adminState\": {\n                                \"type\": \"string\",\n                                \"default\": \"enable\"\n                            },\n                            \"shareNodes\": {\n                                \"type\": \"boolean\",\n                                \"default\": true,\n                                \"const\": true\n                            },\n                            \"serverAddresses\": {\n                                \"type\": \"array\"\n                            }\n                        }\n                    }\n                },\n                \"monitors\": {\n                    \"type\": \"array\",\n                    \"default\": [\n                        \"tcp\"\n                    ],\n                    \"const\": [\n                        \"tcp\"\n                    ]\n                },\n                \"slowRampTime\": {\n                    \"type\": \"number\",\n                    \"default\": 300,\n                    \"const\": 300\n                },\n                \"loadBalancingMode\": {\n                    \"type\": \"string\",\n                    \"default\": \"least-connections-member\",\n                    \"const\": \"least-connections-member\"\n                }\n            },\n            \"type\": \"object\",\n            \"additionalproperties\": false\n        },\n        \"Service_TCP\": {\n            \"properties\": {\n                \"class\": {},\n                \"pool\": {\n                    \"type\": \"string\",\n                    \"default\": \"Pool\"\n                },\n                \"virtualPort\": {\n                    \"type\": \"number\",\n                    \"default\": 8080\n                },\n                \"virtualAddresses\": {\n                    \"type\": \"array\"\n                },\n                \"snat\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/SNATS_BANK_DEV1\",\n                            \"const\": \"/Common/SNATS_BANK_DEV1\"\n                        }\n                    }\n                },\n                \"persistenceMethods\": {\n                    \"type\": \"array\",\n                    \"default\": [\n                        \"source-address\"\n                    ],\n                    \"const\": [\n                        \"source-address\"\n                    ]\n                },\n                \"profileTCP\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"bigip\": {\n                            \"type\": \"string\",\n                            \"default\": \"/Common/dev1_bank_tcp\",\n                            \"const\": \"/Common/dev1_bank_tcp\"\n                        }\n                    }\n                }\n            },\n            \"type\": \"object\",\n            \"additionalProperties\": false\n        }\n    }\n}\n}"
+				},
+				"url": {
+					"raw": "https://{{biq_ip_address}}/mgmt/cm/global/appsvcs-templates",
+					"protocol": "https",
+					"host": [
+						"{{biq_ip_address}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"appsvcs-templates"
+					]
+				},
+				"description": "Creates an HTTP template"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

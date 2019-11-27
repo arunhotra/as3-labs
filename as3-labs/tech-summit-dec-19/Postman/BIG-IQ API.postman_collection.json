@@ -1,0 +1,56 @@
+{
+	"info": {
+		"_postman_id": "c3da3e55-f8c5-4807-8445-13ce85561abe",
+		"name": "BIG-IQ API",
+		"description": "Collection of requests pertaining to the BIG-IQ API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Move/Merge Apps",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"componentAppReferencesToMove\": [{\r\n            \"link\": \"https://localhost/mgmt/cm/global/config-sets/ae4346ff-4298-3bee-bfbf-5374a0f90e57\"\r\n    }],\r\n    \"targetGlobalAppName\": \"tcp_AS3LAB_apps\",\r\n    \"deleteEmptyGlobalAppsWhenDone\": false,\r\n    \"requireNewGlobalApp\": true\r\n}\r\n"
+				},
+				"url": {
+					"raw": "https://{{biq_ip_address}}/mgmt/cm/global/global-apps-merge-move",
+					"protocol": "https",
+					"host": [
+						"{{biq_ip_address}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"global-apps-merge-move"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
